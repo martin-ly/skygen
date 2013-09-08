@@ -81,6 +81,7 @@ func (y *yylexer) Lex(yylval *yySymType) int {
 [0-9]+"h"                  return y.intdurationtoken(yylval, TDURATIONHOUR);
 [0-9]+"m"                  return y.intdurationtoken(yylval, TDURATIONMINUTE);
 [0-9]+"s"                  return y.intdurationtoken(yylval, TDURATIONSECOND);
+[0-9]+"%"                  return y.intpercenttoken(yylval, TPERCENT);
 [0-9]+                     return y.inttoken(yylval, TINT);
 
 "EVENT"                    return y.token(yylval, TEVENT);
@@ -89,6 +90,7 @@ func (y *yylexer) Lex(yylval *yySymType) int {
 "END"                      return y.token(yylval, TEND);
 "AFTER"                    return y.token(yylval, TAFTER);
 "WEIGHT"                   return y.token(yylval, TWEIGHT);
+"PROBABILITY"              return y.token(yylval, TPROBABILITY);
 ","                        return y.token(yylval, TCOMMA);
 "="                        return y.token(yylval, TEQUALS);
 "-"                        return y.token(yylval, TMINUS);
@@ -135,6 +137,16 @@ func (y *yylexer) inttoken(yylval *yySymType, tok int) int {
 // Saves the integer in the buffer and the token to the parser value
 // and returns the token.
 func (y *yylexer) intdurationtoken(yylval *yySymType, tok int) int {
+    var err error
+    if yylval.integer, err = strconv.Atoi(string(y.buf[0:len(y.buf)-1])); err != nil {
+        panic("strconv failed: " + string(y.buf))
+    }
+    return y.token(yylval, tok)
+}
+
+// Saves the integer in the buffer and the token to the parser value
+// and returns the token.
+func (y *yylexer) intpercenttoken(yylval *yySymType, tok int) int {
     var err error
     if yylval.integer, err = strconv.Atoi(string(y.buf[0:len(y.buf)-1])); err != nil {
         panic("strconv failed: " + string(y.buf))

@@ -26,13 +26,13 @@ import (
 }
 
 %token <token> TSTARTSCRIPT
-%token <token> TEVENT, TDO, TEND, TAFTER, TWEIGHT, TSET
+%token <token> TEVENT, TDO, TEND, TAFTER, TWEIGHT, TSET, TPROBABILITY
 %token <token> TTRUE, TFALSE
 %token <token> TMINUS, TCOMMA, TEQUALS
 %token <str> TIDENT, TSTRING
 %token <integer> TDURATIONYEAR, TDURATIONDAY, TDURATIONHOUR
 %token <integer> TDURATIONMINUTE, TDURATIONSECOND
-%token <integer> TINT
+%token <integer> TINT, TPERCENT
 
 %type <script> script
 %type <event> event
@@ -128,10 +128,21 @@ value_sets :
 ;
 
 value_set :
-    TSET key_values
+    TSET key_values value_set_probability
     {
         $$ = core.NewValueSet()
         $$.Values = $2
+    }
+;
+
+value_set_probability :
+    /* empty */
+    {
+        $$ = 1.0
+    }
+|   TPROBABILITY TPERCENT
+    {
+        $$ = $2
     }
 ;
 

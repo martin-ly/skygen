@@ -10,8 +10,7 @@ import (
 type ValueSet struct {
     elementImpl
     Values map[string]interface{}
-    Probability float64
-    Weight int
+    Probability int
 }
 
 // Creates a new value set.
