@@ -85,9 +85,12 @@ func (y *yylexer) Lex(yylval *yySymType) int {
 
 "EVENT"                    return y.token(yylval, TEVENT);
 "DO"                       return y.token(yylval, TDO);
+"SET"                      return y.token(yylval, TSET);
 "END"                      return y.token(yylval, TEND);
 "AFTER"                    return y.token(yylval, TAFTER);
 "WEIGHT"                   return y.token(yylval, TWEIGHT);
+","                        return y.token(yylval, TCOMMA);
+"="                        return y.token(yylval, TEQUALS);
 "-"                        return y.token(yylval, TMINUS);
 
 [a-zA-Z_~][a-zA-Z0-9_]*    return y.strtoken(yylval, TIDENT);

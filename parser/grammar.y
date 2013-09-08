@@ -19,12 +19,16 @@ import (
     script *core.Script
     event *core.Event
     events core.Events
+    value_sets core.ValueSets
+    value_set *core.ValueSet
+    key_values map[string]interface{}
+    key_value key_value
 }
 
 %token <token> TSTARTSCRIPT
-%token <token> TEVENT, TDO, TEND, TAFTER, TWEIGHT
+%token <token> TEVENT, TDO, TEND, TAFTER, TWEIGHT, TSET
 %token <token> TTRUE, TFALSE
-%token <token> TMINUS
+%token <token> TMINUS, TCOMMA, TEQUALS
 %token <str> TIDENT, TSTRING
 %token <integer> TDURATIONYEAR, TDURATIONDAY, TDURATIONHOUR
 %token <integer> TDURATIONMINUTE, TDURATIONSECOND
@@ -38,6 +42,11 @@ import (
 %type <duration> duration_year, duration_day, duration_hour
 %type <duration> duration_minute, duration_second
 %type <duration> duration
+
+%type <value_sets> value_sets
+%type <value_set> value_set
+%type <key_values> key_values
+%type <key_value> key_value
 
 %start start
 
@@ -71,12 +80,13 @@ events :
 ;
 
 event :
-    TEVENT event_after event_weight TDO events TEND
+    TEVENT event_after event_weight TDO value_sets events TEND
     {
         $$ = core.NewEvent()
         $$.After = $2
         $$.Weight = $3
-        $$.SetEvents($5)
+        $$.SetValueSets($5)
+        $$.SetEvents($6)
     }
 ;
 
@@ -105,6 +115,50 @@ event_weight :
         $$ = $2
     }
 ;
+
+value_sets :
+    /* empty */
+    {
+        $$ = make(core.ValueSets, 0)
+    }
+|   value_sets value_set
+    {
+        $$ = append($1, $2)
+    }
+;
+
+value_set :
+    TSET key_values
+    {
+        $$ = core.NewValueSet()
+        $$.Values = $2
+    }
+;
+
+key_values :
+    /* empty */
+    {
+        $$ = make(map[string]interface{})
+    }
+|   key_value
+    {
+        $$ = make(map[string]interface{})
+        $$[$1.key] = $1.value
+    }
+|   key_values TCOMMA key_value
+    {
+        $1[$3.key] = $3.value
+    }
+;
+
+key_value :
+    TIDENT TEQUALS TSTRING
+    {
+        $$.key = $1
+        $$.value = $3
+    }
+;
+
 
 duration :
     duration_year duration_day duration_hour duration_minute duration_second
@@ -140,3 +194,7 @@ duration_second :
 
 %%
 
+type key_value struct {
+    key string
+    value interface{}
+}
