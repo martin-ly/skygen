@@ -4,6 +4,7 @@ package parser
 
 import (
     "github.com/skydb/skygen/core"
+    "strings"
     "time"
 )
 
@@ -12,11 +13,15 @@ import (
 %union{
     token int
     integer int
+    boolean bool
     duration time.Duration
     duration_range []time.Duration
     str string
     strs []string
     script *core.Script
+    schema *core.Schema
+    property *core.Property
+    properties core.Properties
     event *core.Event
     events core.Events
     value_sets core.ValueSets
@@ -27,6 +32,7 @@ import (
 
 %token <token> TSTARTSCRIPT
 %token <token> TEVENT, TDO, TEND, TAFTER, TWEIGHT, TSET, TPROBABILITY
+%token <token> TSCHEMA, TPROPERTY, TTRANSIENT
 %token <token> TTRUE, TFALSE
 %token <token> TMINUS, TCOMMA, TEQUALS
 %token <str> TIDENT, TSTRING
@@ -35,6 +41,10 @@ import (
 %token <integer> TINT, TPERCENT
 
 %type <script> script
+%type <schema> schema
+%type <property> property
+%type <properties> properties
+%type <boolean> property_transient
 %type <event> event
 %type <events> events
 %type <integer> event_weight
@@ -45,6 +55,7 @@ import (
 
 %type <value_sets> value_sets
 %type <value_set> value_set
+%type <integer> value_set_probability
 %type <key_values> key_values
 %type <key_value> key_value
 
@@ -61,11 +72,50 @@ start :
 ;
 
 script :
-    events
+    schema events
     {
         $$ = core.NewScript()
-        $$.SetEvents($1)
+        $$.SetSchema($1)
+        $$.SetEvents($2)
     }
+;
+
+schema :
+    /* empty */
+    {
+        $$ = nil
+    }
+|   TSCHEMA properties TEND
+    {
+        $$ = core.NewSchema()
+        $$.Properties = $2
+    }
+;
+
+properties :
+    /* empty */
+    {
+        $$ = make(core.Properties, 0)
+    }
+|   properties property
+    {
+        $$ = append($1, $2)
+    }
+;
+
+property :
+    TPROPERTY TIDENT TIDENT property_transient
+    {
+        $$ = core.NewProperty()
+        $$.Name = $2
+        $$.DataType = strings.ToLower($3)
+        $$.Transient = $4
+    }
+;
+
+property_transient :
+    /* empty */ { $$ = false }
+|   TTRANSIENT  { $$ = true }
 ;
 
 events :
@@ -132,6 +182,7 @@ value_set :
     {
         $$ = core.NewValueSet()
         $$.Values = $2
+        $$.Probability = $3
     }
 ;
 

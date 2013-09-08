@@ -91,6 +91,9 @@ func (y *yylexer) Lex(yylval *yySymType) int {
 "AFTER"                    return y.token(yylval, TAFTER);
 "WEIGHT"                   return y.token(yylval, TWEIGHT);
 "PROBABILITY"              return y.token(yylval, TPROBABILITY);
+"SCHEMA"                   return y.token(yylval, TSCHEMA);
+"PROPERTY"                 return y.token(yylval, TPROPERTY);
+"TRANSIENT"                return y.token(yylval, TTRANSIENT);
 ","                        return y.token(yylval, TCOMMA);
 "="                        return y.token(yylval, TEQUALS);
 "-"                        return y.token(yylval, TMINUS);

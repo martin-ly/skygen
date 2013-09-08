@@ -55,6 +55,22 @@ func TestParserValueSets(t *testing.T) {
 	}
 }
 
+func TestParserSchema(t *testing.T) {
+	str := trim(`
+        SCHEMA
+          PROPERTY name STRING
+          PROPERTY count INTEGER TRANSIENT
+        END
+    `)
+	script, err := New().ParseString(str)
+	if err != nil {
+		t.Fatal("Parse error:", err)
+	}
+	if script.String() != str {
+		t.Fatal("Unexpected:", "'"+script.String()+"'")
+	}
+}
+
 func trim(s string) string {
 	return regexp.MustCompile(`(?m)^        `).ReplaceAllString(strings.TrimSpace(s), "")
 }

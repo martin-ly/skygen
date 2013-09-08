@@ -3,15 +3,33 @@ package core
 import (
     "fmt"
     "github.com/skydb/sky.go"
+    "strings"
     "time"
 )
 
 type Script struct {
+    schema *Schema
     events Events
 }
 
 func NewScript() *Script {
     return &Script{}
+}
+
+// Returns the script schema.
+func (s *Script) Schema() *Schema {
+    return s.schema
+}
+
+// Sets the script's schema.
+func (s *Script) SetSchema(schema *Schema) {
+    if s.schema != nil {
+        s.schema.SetParent(nil)
+    }
+    s.schema = schema
+    if s.schema != nil {
+        s.schema.SetParent(nil)
+    }
 }
 
 // Returns a list of root events.
@@ -53,5 +71,12 @@ func (s *Script) Generate(t *sky.Table, id string) error {
 
 // Converts the script to a string-based representation.
 func (s *Script) String() string {
-    return s.events.String()
+    output := make([]string, 0)
+    if s.schema != nil {
+        output = append(output, s.schema.String())
+    }
+    if str := s.events.String(); len(str) > 0 {
+        output = append(output, str)
+    }
+    return strings.Join(output, "\n")
 }

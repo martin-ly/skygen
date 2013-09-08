@@ -14,6 +14,7 @@ var host string
 var port uint
 var tableName string
 var iterations int
+var overwrite bool
 var verbose bool
 
 func init() {
@@ -23,6 +24,7 @@ func init() {
     flag.UintVar(&port, "p", 8585, "")
     flag.StringVar(&tableName, "table", "", "")
     flag.StringVar(&tableName, "t", "", "")
+    flag.BoolVar(&overwrite, "overwrite", false, "overwrite existing table")
     flag.IntVar(&iterations, "i", 1, "the number of iterations")
 }
 
@@ -32,6 +34,14 @@ func main() {
     // Load script and setup client.
     script := load()
     _, table := setup()
+
+    // Sync schema if provided.
+    schema := script.Schema()
+    if schema != nil {
+        if err := schema.Sync(table); err != nil {
+            log.Fatalf("Schema error: %s\n", err.Error())
+        }
+    }
 
     // Generate an object for each iteration of the script.
     for i := 0; i < iterations; i++ {
@@ -67,9 +77,18 @@ func setup() (*sky.Client, *sky.Table) {
     }
 
     // Retrieve the table.
-    table, err := client.GetTable(tableName)
+    table, _ := client.GetTable(tableName)
+    if table != nil && overwrite {
+        if err := client.DeleteTable(table); err != nil {
+            log.Fatalf("Unable to overwrite existing table '%v': %v", tableName, err)
+        }
+        table = nil
+    }
     if table == nil {
-        log.Fatalf("Unable to find table '%v': %v", tableName, err)
+        table = sky.NewTable(tableName, nil)
+        if err := client.CreateTable(table); err != nil {
+            log.Fatalf("Unable to create table '%v': %v", tableName, err)
+        }
     }
 
     return client, table
