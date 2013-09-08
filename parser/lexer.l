@@ -76,11 +76,19 @@ func (y *yylexer) Lex(yylval *yySymType) int {
 
 \"(\\.|[^\\"])*\"          return y.quotedstrtoken(yylval, TSTRING);
 \'(\\.|[^\\'])*\'          return y.quotedstrtoken(yylval, TSTRING);
+[0-9]+"y"                  return y.intdurationtoken(yylval, TDURATIONYEAR);
+[0-9]+"d"                  return y.intdurationtoken(yylval, TDURATIONDAY);
+[0-9]+"h"                  return y.intdurationtoken(yylval, TDURATIONHOUR);
+[0-9]+"m"                  return y.intdurationtoken(yylval, TDURATIONMINUTE);
+[0-9]+"s"                  return y.intdurationtoken(yylval, TDURATIONSECOND);
 [0-9]+                     return y.inttoken(yylval, TINT);
 
 "EVENT"                    return y.token(yylval, TEVENT);
 "DO"                       return y.token(yylval, TDO);
 "END"                      return y.token(yylval, TEND);
+"AFTER"                    return y.token(yylval, TAFTER);
+"WEIGHT"                   return y.token(yylval, TWEIGHT);
+"-"                        return y.token(yylval, TMINUS);
 
 [a-zA-Z_~][a-zA-Z0-9_]*    return y.strtoken(yylval, TIDENT);
 [ \t\n\r]+
@@ -116,6 +124,16 @@ func (y *yylexer) quotedstrtoken(yylval *yySymType, tok int) int {
 func (y *yylexer) inttoken(yylval *yySymType, tok int) int {
     var err error
     if yylval.integer, err = strconv.Atoi(string(y.buf)); err != nil {
+        panic("strconv failed: " + string(y.buf))
+    }
+    return y.token(yylval, tok)
+}
+
+// Saves the integer in the buffer and the token to the parser value
+// and returns the token.
+func (y *yylexer) intdurationtoken(yylval *yySymType, tok int) int {
+    var err error
+    if yylval.integer, err = strconv.Atoi(string(y.buf[0:len(y.buf)-1])); err != nil {
         panic("strconv failed: " + string(y.buf))
     }
     return y.token(yylval, tok)

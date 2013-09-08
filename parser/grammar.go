@@ -6,39 +6,58 @@ import __yyfmt__ "fmt"
 //line grammar.y:3
 import (
 	"github.com/skydb/skygen/core"
+	"time"
 )
 
-//line grammar.y:11
+//line grammar.y:12
 type yySymType struct {
-	yys     int
-	token   int
-	integer int
-	str     string
-	strs    []string
-	script  *core.Script
-	event   *core.Event
-	events  core.Events
+	yys            int
+	token          int
+	integer        int
+	duration       time.Duration
+	duration_range []time.Duration
+	str            string
+	strs           []string
+	script         *core.Script
+	event          *core.Event
+	events         core.Events
 }
 
 const TSTARTSCRIPT = 57346
 const TEVENT = 57347
 const TDO = 57348
 const TEND = 57349
-const TTRUE = 57350
-const TFALSE = 57351
-const TIDENT = 57352
-const TSTRING = 57353
-const TINT = 57354
+const TAFTER = 57350
+const TWEIGHT = 57351
+const TTRUE = 57352
+const TFALSE = 57353
+const TMINUS = 57354
+const TIDENT = 57355
+const TSTRING = 57356
+const TDURATIONYEAR = 57357
+const TDURATIONDAY = 57358
+const TDURATIONHOUR = 57359
+const TDURATIONMINUTE = 57360
+const TDURATIONSECOND = 57361
+const TINT = 57362
 
 var yyToknames = []string{
 	"TSTARTSCRIPT",
 	"TEVENT",
 	"TDO",
 	"TEND",
+	"TAFTER",
+	"TWEIGHT",
 	"TTRUE",
 	"TFALSE",
+	"TMINUS",
 	"TIDENT",
 	"TSTRING",
+	"TDURATIONYEAR",
+	"TDURATIONDAY",
+	"TDURATIONHOUR",
+	"TDURATIONMINUTE",
+	"TDURATIONSECOND",
 	"TINT",
 }
 var yyStatenames = []string{}
@@ -47,7 +66,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyMaxDepth = 200
 
-//line grammar.y:70
+//line grammar.y:141
 
 //line yacctab:1
 var yyExca = []int{
@@ -56,41 +75,54 @@ var yyExca = []int{
 	-2, 0,
 }
 
-const yyNprod = 6
+const yyNprod = 22
 const yyPrivate = 57344
 
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 10
+const yyLast = 28
 
 var yyAct = []int{
 
-	6, 4, 9, 7, 6, 2, 1, 5, 3, 8,
+	15, 27, 25, 22, 11, 18, 13, 4, 16, 10,
+	6, 8, 23, 14, 6, 2, 1, 26, 24, 21,
+	17, 20, 19, 12, 7, 9, 5, 3,
 }
 var yyPact = []int{
 
-	1, -1000, -1000, -1000, -1, -1000, -3, -1000, -5, -1000,
+	11, -1000, -1000, -1000, 9, -1000, 3, 0, -9, 7,
+	-20, -4, -11, -1000, -1000, -1000, -9, -14, -1000, 5,
+	-1000, -16, -1000, -1000, -18, -1000, -1000, -1000,
 }
 var yyPgo = []int{
 
-	0, 8, 7, 1, 6,
+	0, 27, 26, 7, 25, 24, 23, 20, 19, 18,
+	17, 4, 16,
 }
 var yyR1 = []int{
 
-	0, 4, 1, 3, 3, 2,
+	0, 12, 1, 3, 3, 2, 5, 5, 5, 4,
+	4, 11, 6, 6, 7, 7, 8, 8, 9, 9,
+	10, 10,
 }
 var yyR2 = []int{
 
-	0, 2, 1, 0, 2, 4,
+	0, 2, 1, 0, 2, 6, 0, 4, 2, 0,
+	2, 5, 0, 1, 0, 1, 0, 1, 0, 1,
+	0, 1,
 }
 var yyChk = []int{
 
-	-1000, -4, 4, -1, -3, -2, 5, 6, -3, 7,
+	-1000, -12, 4, -1, -3, -2, 5, -5, 8, -4,
+	9, -11, -6, 15, 6, 20, 12, -7, 16, -3,
+	-11, -8, 17, 7, -9, 18, -10, 19,
 }
 var yyDef = []int{
 
-	0, -2, 3, 1, 2, 4, 0, 3, 0, 5,
+	0, -2, 3, 1, 2, 4, 6, 9, 12, 0,
+	0, 8, 14, 13, 3, 10, 12, 16, 15, 0,
+	7, 18, 17, 5, 20, 19, 11, 21,
 }
 var yyTok1 = []int{
 
@@ -99,7 +131,7 @@ var yyTok1 = []int{
 var yyTok2 = []int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-	12,
+	12, 13, 14, 15, 16, 17, 18, 19, 20,
 }
 var yyTok3 = []int{
 	0,
@@ -331,32 +363,114 @@ yydefault:
 	switch yynt {
 
 	case 1:
-		//line grammar.y:37
+		//line grammar.y:48
 		{
 			l := yylex.(*yylexer)
 			l.script = yyS[yypt-0].script
 		}
 	case 2:
-		//line grammar.y:45
+		//line grammar.y:56
 		{
 			yyVAL.script = core.NewScript()
 			yyVAL.script.SetEvents(yyS[yypt-0].events)
 		}
 	case 3:
-		//line grammar.y:53
+		//line grammar.y:64
 		{
 			yyVAL.events = make(core.Events, 0)
 		}
 	case 4:
-		//line grammar.y:57
+		//line grammar.y:68
 		{
 			yyVAL.events = append(yyS[yypt-1].events, yyS[yypt-0].event)
 		}
 	case 5:
-		//line grammar.y:64
+		//line grammar.y:75
 		{
 			yyVAL.event = core.NewEvent()
+			yyVAL.event.After = yyS[yypt-4].duration_range
+			yyVAL.event.Weight = yyS[yypt-3].integer
 			yyVAL.event.SetEvents(yyS[yypt-1].events)
+		}
+	case 6:
+		//line grammar.y:85
+		{
+			yyVAL.duration_range = []time.Duration{}
+		}
+	case 7:
+		//line grammar.y:89
+		{
+			yyVAL.duration_range = []time.Duration{yyS[yypt-2].duration, yyS[yypt-0].duration}
+		}
+	case 8:
+		//line grammar.y:93
+		{
+			yyVAL.duration_range = []time.Duration{yyS[yypt-0].duration, yyS[yypt-0].duration}
+		}
+	case 9:
+		//line grammar.y:100
+		{
+			yyVAL.integer = 1
+		}
+	case 10:
+		//line grammar.y:104
+		{
+			yyVAL.integer = yyS[yypt-0].integer
+		}
+	case 11:
+		//line grammar.y:111
+		{
+			yyVAL.duration = yyS[yypt-4].duration + yyS[yypt-3].duration + yyS[yypt-2].duration + yyS[yypt-1].duration + yyS[yypt-0].duration
+		}
+	case 12:
+		//line grammar.y:117
+		{
+			yyVAL.duration = 0 * time.Hour
+		}
+	case 13:
+		//line grammar.y:118
+		{
+			yyVAL.duration = time.Duration(yyS[yypt-0].integer*24*365) * time.Hour
+		}
+	case 14:
+		//line grammar.y:122
+		{
+			yyVAL.duration = 0 * time.Hour
+		}
+	case 15:
+		//line grammar.y:123
+		{
+			yyVAL.duration = time.Duration(yyS[yypt-0].integer*24) * time.Hour
+		}
+	case 16:
+		//line grammar.y:127
+		{
+			yyVAL.duration = 0 * time.Hour
+		}
+	case 17:
+		//line grammar.y:128
+		{
+			yyVAL.duration = time.Duration(yyS[yypt-0].integer) * time.Hour
+		}
+	case 18:
+		//line grammar.y:132
+		{
+			yyVAL.duration = 0 * time.Minute
+		}
+	case 19:
+		//line grammar.y:133
+		{
+			yyVAL.duration = time.Duration(yyS[yypt-0].integer) * time.Minute
+		}
+	case 20:
+		//line grammar.y:137
+		{
+			yyVAL.duration = 0 * time.Second
+		}
+	case 21:
+		//line grammar.y:138
+		{
+			yyVAL.duration = time.Duration(yyS[yypt-0].integer) * time.Second
 		}
 	}
 	goto yystack /* stack new state and value */

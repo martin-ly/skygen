@@ -9,7 +9,10 @@ import (
 func TestParserScript(t *testing.T) {
 	str := trim(`
         EVENT DO
-          EVENT DO
+          EVENT AFTER 5y4d3h2m1s DO
+            
+          END
+          EVENT AFTER 2s - 3s DO
             
           END
         END

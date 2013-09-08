@@ -1,12 +1,15 @@
 package core
 
 import (
+    "time"
 )
 
 // The definition for a generated event.
 type Event struct {
     elementImpl
     events Events
+    After []time.Duration
+    Weight int
 }
 
 // Creates a new event definition.
@@ -32,7 +35,15 @@ func (e *Event) SetEvents(events Events) {
 
 // Converts the event to a string-based representation.
 func (e *Event) String() string {
-    str := "EVENT DO\n"
+    str := "EVENT"
+    if len(e.After) == 2 {
+        if e.After[0] == e.After[1] {
+            str += " AFTER " + formatDuration(e.After[0])
+        } else {
+            str += " AFTER " + formatDuration(e.After[0]) + " - " + formatDuration(e.After[1])
+        }
+    }
+    str += " DO\n"
     str += lineStartRegex.ReplaceAllString(e.events.String(), "  ") + "\n"
     str += "END"
     return str
