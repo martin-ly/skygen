@@ -8,10 +8,10 @@ import (
 
 func TestParserNestedEvents(t *testing.T) {
 	str := trim(`
-        EVENT DO
-          EVENT DO
+        EVENT
+          EVENT
           END
-          EVENT DO
+          EVENT
           END
         END
     `)
@@ -26,8 +26,8 @@ func TestParserNestedEvents(t *testing.T) {
 
 func TestParserAfter(t *testing.T) {
 	str := trim(`
-        EVENT DO
-          EVENT AFTER 5y4d3h2m1s DO
+        EVENT
+          EVENT AFTER 5y4d3h2m1s
           END
         END
     `)
@@ -42,7 +42,7 @@ func TestParserAfter(t *testing.T) {
 
 func TestParserValueSets(t *testing.T) {
 	str := trim(`
-        EVENT DO
+        EVENT
           SET foo = "bar"
         END
     `)

@@ -31,7 +31,7 @@ import (
 }
 
 %token <token> TSTARTSCRIPT
-%token <token> TEVENT, TDO, TEND, TAFTER, TWEIGHT, TSET, TPROBABILITY
+%token <token> TEVENT, TEND, TAFTER, TWEIGHT, TSET, TPROBABILITY
 %token <token> TSCHEMA, TPROPERTY, TTRANSIENT
 %token <token> TTRUE, TFALSE
 %token <token> TMINUS, TCOMMA, TEQUALS
@@ -130,13 +130,13 @@ events :
 ;
 
 event :
-    TEVENT event_after event_weight TDO value_sets events TEND
+    TEVENT event_after event_weight value_sets events TEND
     {
         $$ = core.NewEvent()
         $$.After = $2
         $$.Weight = $3
-        $$.SetValueSets($5)
-        $$.SetEvents($6)
+        $$.SetValueSets($4)
+        $$.SetEvents($5)
     }
 ;
 
@@ -189,7 +189,7 @@ value_set :
 value_set_probability :
     /* empty */
     {
-        $$ = 1.0
+        $$ = 100
     }
 |   TPROBABILITY TPERCENT
     {

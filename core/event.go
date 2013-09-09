@@ -1,6 +1,7 @@
 package core
 
 import (
+    "encoding/json"
     "fmt"
     "github.com/skydb/sky.go"
     "math/rand"
@@ -54,12 +55,17 @@ func (e *Event) SetEvents(events Events) {
 }
 
 // Generates an event.
-func (e *Event) Generate(t *sky.Table, id string, timestamp time.Time) error {
+func (e *Event) Generate(stream *sky.EventStream, id string, timestamp time.Time) error {
     // Move timestamp forward.
     if len(e.After) == 2 {
-        duration := e.After[0] + time.Duration(rand.Int63n(int64(e.After[1]) - int64(e.After[0])))
+        duration := e.After[0]
+        diff := int64(e.After[1]) - int64(e.After[0])
+        if diff > 0 {
+            duration += time.Duration(rand.Int63n(diff))
+        }
         timestamp = timestamp.Add(duration)
     }
+
 
     // Generate data for event.
     data := make(map[string]interface{})
@@ -73,13 +79,20 @@ func (e *Event) Generate(t *sky.Table, id string, timestamp time.Time) error {
 
     // Only create an event if we have data.
     if len(data) > 0 {
-        if err := t.AddEvent(id, sky.NewEvent(timestamp, data), sky.Merge); err != nil {
+        if err := stream.AddEvent(id, sky.NewEvent(timestamp, data)); err != nil {
             return err
         }
     }
 
+    // Show events as they're being generated.
+    json, _ := json.Marshal(map[string]interface{}{
+        "timestamp":timestamp.UTC().Format(time.RFC3339),
+        "data":data,
+    })
+    fmt.Println(string(json))
+
     // Continue to generate events down the chain.
-    return e.events.Generate(t, id, timestamp)
+    return e.events.Generate(stream, id, timestamp)
 }
 
 // Converts the event to a string-based representation.
@@ -96,7 +109,7 @@ func (e *Event) String() string {
     if e.Weight != 1 {
         str += fmt.Sprintf(" WEIGHT %d", e.Weight)
     }
-    str += " DO\n"
+    str += "\n"
 
     inner = e.valueSets.String()
     if inner != "" {

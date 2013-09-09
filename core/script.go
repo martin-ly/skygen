@@ -60,13 +60,13 @@ func (s *Script) Script() *Script {
 }
 
 // Generates a timeline for an object.
-func (s *Script) Generate(t *sky.Table, id string) error {
+func (s *Script) Generate(stream *sky.EventStream, id string) error {
     timestamp, err := time.Parse(time.RFC3339, "2000-01-01T00:00:00Z")
     if err != nil {
         return fmt.Errorf("Invalid timestamp: %s", "2000-01-01T00:00:00Z")
     }
 
-    return s.events.Generate(t, id, timestamp)
+    return s.events.Generate(stream, id, timestamp)
 }
 
 // Converts the script to a string-based representation.

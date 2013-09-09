@@ -18,7 +18,7 @@ func (s Events) String() string {
 }
 
 // Selects one event based on weights and generate events based on it.
-func (s Events) Generate(t *sky.Table, id string, timestamp time.Time) error {
+func (s Events) Generate(stream *sky.EventStream, id string, timestamp time.Time) error {
     // Generate numbers based on weights and pick the highest.
     var maxValue int = 0
     var event *Event
@@ -33,7 +33,7 @@ func (s Events) Generate(t *sky.Table, id string, timestamp time.Time) error {
 
     // If an event was found then generate it.
     if event != nil {
-        return event.Generate(t, id, timestamp)
+        return event.Generate(stream, id, timestamp)
     }
 
     return nil

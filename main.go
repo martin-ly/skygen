@@ -2,12 +2,14 @@ package main
 
 import (
     "flag"
+    "fmt"
     "github.com/skydb/sky.go"
     "github.com/skydb/skygen/core"
     "github.com/skydb/skygen/parser"
     "math/rand"
     "log"
     "os"
+    "time"
 )
 
 var host string
@@ -16,6 +18,7 @@ var tableName string
 var iterations int
 var overwrite bool
 var verbose bool
+var seed int
 
 func init() {
     flag.StringVar(&host, "host", "localhost", "")
@@ -26,10 +29,18 @@ func init() {
     flag.StringVar(&tableName, "t", "", "")
     flag.BoolVar(&overwrite, "overwrite", false, "overwrite existing table")
     flag.IntVar(&iterations, "i", 1, "the number of iterations")
+    flag.IntVar(&seed, "seed", 0, "the randomizer seed")
 }
 
 func main() {
     flag.Parse()
+
+    // Seed the randomizer.
+    if seed == 0 {
+        seed = int(time.Now().UnixNano()) % 1000000
+    }
+    rand.Seed(int64(seed))
+    fmt.Printf("SEED=%d\n", seed)
 
     // Load script and setup client.
     script := load()
@@ -44,12 +55,14 @@ func main() {
     }
 
     // Generate an object for each iteration of the script.
-    for i := 0; i < iterations; i++ {
-        objectId := genid()
-        if err := script.Generate(table, objectId); err != nil {
-            log.Fatalf("Generation error: %s\n", err.Error())
+    table.Stream(func(stream *sky.EventStream) {
+        for i := 0; i < iterations; i++ {
+            objectId := genid()
+            if err := script.Generate(stream, objectId); err != nil {
+                log.Fatalf("Generation error: %s\n", err.Error())
+            }
         }
-    }
+    })
 }
 
 // Reads a script from a file argument.

@@ -34,34 +34,32 @@ type yySymType struct {
 
 const TSTARTSCRIPT = 57346
 const TEVENT = 57347
-const TDO = 57348
-const TEND = 57349
-const TAFTER = 57350
-const TWEIGHT = 57351
-const TSET = 57352
-const TPROBABILITY = 57353
-const TSCHEMA = 57354
-const TPROPERTY = 57355
-const TTRANSIENT = 57356
-const TTRUE = 57357
-const TFALSE = 57358
-const TMINUS = 57359
-const TCOMMA = 57360
-const TEQUALS = 57361
-const TIDENT = 57362
-const TSTRING = 57363
-const TDURATIONYEAR = 57364
-const TDURATIONDAY = 57365
-const TDURATIONHOUR = 57366
-const TDURATIONMINUTE = 57367
-const TDURATIONSECOND = 57368
-const TINT = 57369
-const TPERCENT = 57370
+const TEND = 57348
+const TAFTER = 57349
+const TWEIGHT = 57350
+const TSET = 57351
+const TPROBABILITY = 57352
+const TSCHEMA = 57353
+const TPROPERTY = 57354
+const TTRANSIENT = 57355
+const TTRUE = 57356
+const TFALSE = 57357
+const TMINUS = 57358
+const TCOMMA = 57359
+const TEQUALS = 57360
+const TIDENT = 57361
+const TSTRING = 57362
+const TDURATIONYEAR = 57363
+const TDURATIONDAY = 57364
+const TDURATIONHOUR = 57365
+const TDURATIONMINUTE = 57366
+const TDURATIONSECOND = 57367
+const TINT = 57368
+const TPERCENT = 57369
 
 var yyToknames = []string{
 	"TSTARTSCRIPT",
 	"TEVENT",
-	"TDO",
 	"TEND",
 	"TAFTER",
 	"TWEIGHT",
@@ -110,31 +108,29 @@ const yyPrivate = 57344
 var yyTokenNames []string
 var yyStates []string
 
-const yyLast = 51
+const yyLast = 50
 
 var yyAct = []int{
 
-	40, 6, 49, 23, 43, 37, 32, 18, 26, 20,
-	50, 41, 21, 15, 47, 46, 24, 28, 10, 5,
-	35, 17, 45, 9, 12, 38, 22, 14, 9, 2,
-	1, 33, 30, 39, 44, 34, 29, 42, 36, 31,
-	25, 19, 13, 16, 8, 27, 48, 7, 11, 4,
-	3,
+	37, 48, 23, 46, 18, 40, 34, 6, 26, 20,
+	49, 38, 21, 15, 44, 43, 24, 28, 10, 5,
+	31, 17, 42, 14, 12, 9, 35, 9, 2, 32,
+	29, 1, 36, 41, 30, 22, 45, 39, 33, 25,
+	19, 13, 16, 47, 8, 27, 7, 11, 4, 3,
 }
 var yyPact = []int{
 
-	25, -1000, 7, -1000, -1000, -1000, 23, 11, -1000, 19,
-	-1000, -1000, -7, 12, -13, -8, 20, -24, -1, -15,
-	-1000, 3, -1000, -1000, -13, -18, -1000, -1000, -1000, 10,
-	-1000, -20, -1000, 18, -1000, -9, -22, -1000, -1000, 4,
-	-1000, -5, -1000, -1000, -1000, -9, -26, -11, -1000, -1000,
-	-1000,
+	24, -1000, 8, -1000, -1000, -1000, 22, 12, -1000, 16,
+	-1000, -1000, -6, 13, -12, -7, -1000, -24, 0, -14,
+	-1000, 4, 11, -1000, -12, -17, -1000, -1000, -1000, 20,
+	-1000, -8, -1000, -19, -1000, -1000, 5, -1000, -4, -22,
+	-1000, -1000, -8, -26, -10, -1000, -1000, -1000, -1000, -1000,
 }
 var yyPgo = []int{
 
-	0, 50, 49, 48, 47, 45, 44, 1, 43, 42,
-	41, 40, 39, 38, 37, 7, 36, 35, 34, 33,
-	0, 30,
+	0, 49, 48, 47, 46, 45, 44, 7, 42, 41,
+	40, 39, 38, 37, 36, 4, 35, 34, 33, 32,
+	0, 31,
 }
 var yyR1 = []int{
 
@@ -146,27 +142,25 @@ var yyR1 = []int{
 var yyR2 = []int{
 
 	0, 2, 2, 0, 3, 0, 2, 4, 0, 1,
-	0, 2, 7, 0, 4, 2, 0, 2, 0, 2,
+	0, 2, 6, 0, 4, 2, 0, 2, 0, 2,
 	3, 0, 2, 0, 1, 3, 3, 5, 0, 1,
 	0, 1, 0, 1, 0, 1, 0, 1,
 }
 var yyChk = []int{
 
-	-1000, -21, 4, -1, -2, 12, -7, -4, -6, 5,
-	7, -3, 13, -9, 8, 20, -8, 9, -15, -10,
-	22, 20, 6, 27, 17, -11, 23, -5, 14, -16,
-	-15, -12, 24, -7, -17, 10, -13, 25, 7, -19,
-	-20, 20, -14, 26, -18, 18, 11, 19, -20, 28,
-	21,
+	-1000, -21, 4, -1, -2, 11, -7, -4, -6, 5,
+	6, -3, 12, -9, 7, 19, -8, 8, -15, -10,
+	21, 19, -16, 26, 16, -11, 22, -5, 13, -7,
+	-17, 9, -15, -12, 23, 6, -19, -20, 19, -13,
+	24, -18, 17, 10, 18, -14, 25, -20, 27, 20,
 }
 var yyDef = []int{
 
 	0, -2, 3, 1, 10, 5, 2, 0, 11, 13,
-	4, 6, 0, 16, 28, 0, 0, 0, 15, 30,
-	29, 8, 18, 17, 28, 32, 31, 7, 9, 10,
-	14, 34, 33, 0, 19, 23, 36, 35, 12, 21,
-	24, 0, 27, 37, 20, 0, 0, 0, 25, 22,
-	26,
+	4, 6, 0, 16, 28, 0, 18, 0, 15, 30,
+	29, 8, 10, 17, 28, 32, 31, 7, 9, 0,
+	19, 23, 14, 34, 33, 12, 21, 24, 0, 36,
+	35, 20, 0, 0, 0, 27, 37, 25, 22, 26,
 }
 var yyTok1 = []int{
 
@@ -176,7 +170,7 @@ var yyTok2 = []int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-	22, 23, 24, 25, 26, 27, 28,
+	22, 23, 24, 25, 26, 27,
 }
 var yyTok3 = []int{
 	0,
@@ -473,8 +467,8 @@ yydefault:
 		//line grammar.y:134
 		{
 			yyVAL.event = core.NewEvent()
-			yyVAL.event.After = yyS[yypt-5].duration_range
-			yyVAL.event.Weight = yyS[yypt-4].integer
+			yyVAL.event.After = yyS[yypt-4].duration_range
+			yyVAL.event.Weight = yyS[yypt-3].integer
 			yyVAL.event.SetValueSets(yyS[yypt-2].value_sets)
 			yyVAL.event.SetEvents(yyS[yypt-1].events)
 		}
@@ -523,7 +517,7 @@ yydefault:
 	case 21:
 		//line grammar.y:191
 		{
-			yyVAL.integer = 1.0
+			yyVAL.integer = 100
 		}
 	case 22:
 		//line grammar.y:195
