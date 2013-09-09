@@ -93,6 +93,7 @@ func (y *yylexer) Lex(yylval *yySymType) int {
 "SCHEMA"                   return y.token(yylval, TSCHEMA);
 "PROPERTY"                 return y.token(yylval, TPROPERTY);
 "TRANSIENT"                return y.token(yylval, TTRANSIENT);
+"EXIT"                     return y.token(yylval, TEXIT);
 ","                        return y.token(yylval, TCOMMA);
 "="                        return y.token(yylval, TEQUALS);
 "-"                        return y.token(yylval, TMINUS);

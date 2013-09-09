@@ -32,7 +32,7 @@ import (
 
 %token <token> TSTARTSCRIPT
 %token <token> TEVENT, TEND, TAFTER, TWEIGHT, TSET, TPROBABILITY
-%token <token> TSCHEMA, TPROPERTY, TTRANSIENT
+%token <token> TSCHEMA, TPROPERTY, TTRANSIENT, TEXIT
 %token <token> TTRUE, TFALSE
 %token <token> TMINUS, TCOMMA, TEQUALS
 %token <str> TIDENT, TSTRING
@@ -47,7 +47,8 @@ import (
 %type <boolean> property_transient
 %type <event> event
 %type <events> events
-%type <integer> event_weight
+%type <integer> event_weight, event_exit_probability
+%type <integer> probability
 %type <duration_range> event_after
 %type <duration> duration_year, duration_day, duration_hour
 %type <duration> duration_minute, duration_second
@@ -55,7 +56,6 @@ import (
 
 %type <value_sets> value_sets
 %type <value_set> value_set
-%type <integer> value_set_probability
 %type <key_values> key_values
 %type <key_value> key_value
 
@@ -130,13 +130,14 @@ events :
 ;
 
 event :
-    TEVENT event_after event_weight value_sets events TEND
+    TEVENT event_after event_weight event_exit_probability value_sets events TEND
     {
         $$ = core.NewEvent()
         $$.After = $2
         $$.Weight = $3
-        $$.SetValueSets($4)
-        $$.SetEvents($5)
+        $$.ExitProbability = $4
+        $$.SetValueSets($5)
+        $$.SetEvents($6)
     }
 ;
 
@@ -166,6 +167,11 @@ event_weight :
     }
 ;
 
+event_exit_probability :
+    /* empty */  { $$ = 0 }
+|   TEXIT probability { $$ = $2 }
+;
+
 value_sets :
     /* empty */
     {
@@ -178,22 +184,11 @@ value_sets :
 ;
 
 value_set :
-    TSET key_values value_set_probability
+    TSET key_values probability
     {
         $$ = core.NewValueSet()
         $$.Values = $2
         $$.Probability = $3
-    }
-;
-
-value_set_probability :
-    /* empty */
-    {
-        $$ = 100
-    }
-|   TPROBABILITY TPERCENT
-    {
-        $$ = $2
     }
 ;
 
@@ -221,6 +216,17 @@ key_value :
     }
 ;
 
+
+probability :
+    /* empty */
+    {
+        $$ = 100
+    }
+|   TPROBABILITY TPERCENT
+    {
+        $$ = $2
+    }
+;
 
 duration :
     duration_year duration_day duration_hour duration_minute duration_second

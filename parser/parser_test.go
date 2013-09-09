@@ -42,7 +42,7 @@ func TestParserAfter(t *testing.T) {
 
 func TestParserValueSets(t *testing.T) {
 	str := trim(`
-        EVENT
+        EVENT EXIT PROBABILITY 30%
           SET foo = "bar"
         END
     `)

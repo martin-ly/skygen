@@ -14,6 +14,7 @@ type Event struct {
     valueSets ValueSets
     events Events
     After []time.Duration
+    ExitProbability int
     Weight int
 }
 
@@ -91,6 +92,11 @@ func (e *Event) Generate(stream *sky.EventStream, id string, timestamp time.Time
     })
     fmt.Println(string(json))
 
+    // Probabalistically stop this flow.
+    if e.ExitProbability > rand.Intn(100) {
+        return nil
+    }
+
     // Continue to generate events down the chain.
     return e.events.Generate(stream, id, timestamp)
 }
@@ -108,6 +114,9 @@ func (e *Event) String() string {
     }
     if e.Weight != 1 {
         str += fmt.Sprintf(" WEIGHT %d", e.Weight)
+    }
+    if e.ExitProbability > 0 {
+        str += fmt.Sprintf(" EXIT PROBABILITY %d%%", e.ExitProbability)
     }
     str += "\n"
 
