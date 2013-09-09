@@ -71,6 +71,27 @@ func TestParserSchema(t *testing.T) {
 	}
 }
 
+func TestParserComment(t *testing.T) {
+	str := trim(`
+        # This is a comment.
+        EVENT
+          SET foo = "bar"  # This is a comment too!
+        END
+    `)
+	exp := trim(`
+        EVENT
+          SET foo = "bar"
+        END
+    `)
+	script, err := New().ParseString(str)
+	if err != nil {
+		t.Fatal("Parse error:", err)
+	}
+	if script.String() != exp {
+		t.Fatal("Unexpected:", "'"+script.String()+"'")
+	}
+}
+
 func trim(s string) string {
 	return regexp.MustCompile(`(?m)^        `).ReplaceAllString(strings.TrimSpace(s), "")
 }
