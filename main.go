@@ -61,6 +61,7 @@ func main() {
             if err := script.Generate(stream, objectId); err != nil {
                 log.Fatalf("Generation error: %s\n", err.Error())
             }
+            fmt.Println("")
         }
     })
 }

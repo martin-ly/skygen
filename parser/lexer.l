@@ -74,7 +74,7 @@ func (y *yylexer) Lex(yylval *yySymType) int {
     y.tlineidx, y.tcharidx = y.lineidx, y.charidx
     y.buf = y.buf[:0]
 
-"#"[^\n]+
+"#"[^\n]*
 
 \"(\\.|[^\\"])*\"          return y.quotedstrtoken(yylval, TSTRING);
 \'(\\.|[^\\'])*\'          return y.quotedstrtoken(yylval, TSTRING);

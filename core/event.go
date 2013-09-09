@@ -87,6 +87,7 @@ func (e *Event) Generate(stream *sky.EventStream, id string, timestamp time.Time
 
     // Show events as they're being generated.
     json, _ := json.Marshal(map[string]interface{}{
+        "id":id,
         "timestamp":timestamp.UTC().Format(time.RFC3339),
         "data":data,
     })
