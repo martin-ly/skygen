@@ -7,6 +7,7 @@ import (
     "github.com/skydb/skygen/core"
     "github.com/skydb/skygen/parser"
     "math/rand"
+    "io/ioutil"
     "log"
     "os"
     "time"
@@ -30,17 +31,25 @@ func init() {
     flag.BoolVar(&overwrite, "overwrite", false, "overwrite existing table")
     flag.IntVar(&iterations, "i", 1, "the number of iterations")
     flag.IntVar(&seed, "seed", 0, "the randomizer seed")
+    flag.BoolVar(&verbose, "verbose", false, "")
+    flag.BoolVar(&verbose, "v", false, "")
 }
 
 func main() {
     flag.Parse()
+
+    // Discard out put unless verbose logging is enabled.
+    if !verbose {
+        log.SetOutput(ioutil.Discard)
+    }
+    log.SetFlags(0)
 
     // Seed the randomizer.
     if seed == 0 {
         seed = int(time.Now().UnixNano()) % 1000000
     }
     rand.Seed(int64(seed))
-    fmt.Printf("SEED=%d\n", seed)
+    fmt.Printf("Generating using seed... %d\n", seed)
 
     // Load script and setup client.
     script := load()
@@ -61,7 +70,7 @@ func main() {
             if err := script.Generate(stream, objectId); err != nil {
                 log.Fatalf("Generation error: %s\n", err.Error())
             }
-            fmt.Println("")
+            log.Println("")
         }
     })
 }

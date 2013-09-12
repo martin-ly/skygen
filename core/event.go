@@ -3,6 +3,7 @@ package core
 import (
     "encoding/json"
     "fmt"
+    "log"
     "github.com/skydb/sky.go"
     "math/rand"
     "time"
@@ -91,7 +92,7 @@ func (e *Event) Generate(stream *sky.EventStream, id string, timestamp time.Time
         "timestamp":timestamp.UTC().Format(time.RFC3339),
         "data":data,
     })
-    fmt.Println(string(json))
+    log.Println(string(json))
 
     // Probabalistically stop this flow.
     if e.ExitProbability > rand.Intn(100) {
