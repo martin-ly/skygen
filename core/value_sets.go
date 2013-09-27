@@ -1,15 +1,15 @@
 package core
 
 import (
-    "strings"
+	"strings"
 )
 
 type ValueSets []*ValueSet
 
 func (s ValueSets) String() string {
-    output := []string{}
-    for _, v := range s {
-        output = append(output, v.String())
-    }
-    return strings.Join(output, "\n")
+	output := []string{}
+	for _, v := range s {
+		output = append(output, v.String())
+	}
+	return strings.Join(output, "\n")
 }
